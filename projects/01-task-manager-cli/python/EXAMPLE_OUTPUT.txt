@@ -1,0 +1,230 @@
+# Task Manager CLI - Example Usage and Output
+
+This file shows real examples of using the Task Manager CLI.
+
+================================================================================
+HELP COMMAND
+================================================================================
+
+$ python task.py --help
+
+usage: task [-h] {add,list,complete,update,delete,search,stats} ...
+
+Task Manager CLI - Demonstrating SOLID Principles
+
+positional arguments:
+  {add,list,complete,update,delete,search,stats}
+                        Available commands
+    add                 Add a new task
+    list                List tasks
+    complete            Mark task as complete
+    update              Update a task
+    delete              Delete a task
+    search              Search tasks
+    stats               Show statistics
+
+================================================================================
+ADDING TASKS
+================================================================================
+
+$ python task.py add "Learn SOLID principles" --description "Study all 5 principles" --priority high --due "2025-10-10"
+✓ Task added successfully: Learn SOLID principles
+
+$ python task.py add "Build Task Manager CLI" --priority high --due "2025-10-15"
+✓ Task added successfully: Build Task Manager CLI
+
+$ python task.py add "Write tests" --priority medium
+✓ Task added successfully: Write tests
+
+================================================================================
+LIST ALL TASKS (Simple Format)
+================================================================================
+
+$ python task.py list
+
+[ ] 0. ↑ Learn SOLID principles - Study all 5 principles (Due: 2025-10-10)
+[ ] 1. ↑ Build Task Manager CLI (Due: 2025-10-15)
+[ ] 2. → Write tests
+
+================================================================================
+LIST WITH DETAILED VIEW
+================================================================================
+
+$ python task.py list --detailed
+
+============================================================
+Task #0 (ID: abc-123)
+============================================================
+Title:       Learn SOLID principles
+Description: Study all 5 principles
+Priority:    HIGH
+Status:      Pending
+Due Date:    2025-10-10
+Created:     2025-10-04T22:00:00
+
+============================================================
+Task #1 (ID: def-456)
+============================================================
+Title:       Build Task Manager CLI
+Description: 
+Priority:    HIGH
+Status:      Pending
+Due Date:    2025-10-15
+Created:     2025-10-04T22:01:00
+
+================================================================================
+COMPLETING TASKS
+================================================================================
+
+$ python task.py complete 0
+✓ Task 0 marked as completed
+
+$ python task.py list
+
+[✓] 0. ↑ Learn SOLID principles - Study all 5 principles (Due: 2025-10-10)
+[ ] 1. ↑ Build Task Manager CLI (Due: 2025-10-15)
+[ ] 2. → Write tests
+
+================================================================================
+FILTERING
+================================================================================
+
+$ python task.py list --status completed
+
+[✓] 0. ↑ Learn SOLID principles - Study all 5 principles (Due: 2025-10-10)
+
+$ python task.py list --priority high
+
+[✓] 0. ↑ Learn SOLID principles - Study all 5 principles (Due: 2025-10-10)
+[ ] 1. ↑ Build Task Manager CLI (Due: 2025-10-15)
+
+================================================================================
+SEARCHING
+================================================================================
+
+$ python task.py search "SOLID"
+
+Found 1 task(s) matching 'SOLID':
+
+[✓] 0. ↑ Learn SOLID principles - Study all 5 principles (Due: 2025-10-10)
+
+================================================================================
+UPDATING TASKS
+================================================================================
+
+$ python task.py update 2 --priority high --description "Write comprehensive tests"
+✓ Task 2 updated successfully
+
+$ python task.py list
+
+[✓] 0. ↑ Learn SOLID principles - Study all 5 principles (Due: 2025-10-10)
+[ ] 1. ↑ Build Task Manager CLI (Due: 2025-10-15)
+[ ] 2. ↑ Write tests - Write comprehensive tests
+
+================================================================================
+STATISTICS
+================================================================================
+
+$ python task.py stats
+
+========================================
+Task Statistics
+========================================
+Total Tasks:      3
+Completed:        1
+Pending:          2
+
+By Priority:
+  High:           3
+  Medium:         0
+  Low:            0
+========================================
+
+================================================================================
+DELETING TASKS
+================================================================================
+
+$ python task.py delete 2
+✓ Task 2 deleted
+
+$ python task.py list
+
+[✓] 0. ↑ Learn SOLID principles - Study all 5 principles (Due: 2025-10-10)
+[ ] 1. ↑ Build Task Manager CLI (Due: 2025-10-15)
+
+================================================================================
+DATA PERSISTENCE
+================================================================================
+
+Tasks are automatically saved to tasks.json:
+
+$ ls -lh tasks.json
+-rw-rw-r-- 1 user user 756 Oct  4 22:00 tasks.json
+
+When you run the CLI again, your tasks are automatically loaded!
+
+================================================================================
+DEMONSTRATION OF SOLID PRINCIPLES
+================================================================================
+
+This CLI demonstrates all 5 SOLID principles:
+
+✅ SRP (Single Responsibility Principle)
+   - Task: Data representation only
+   - TaskService: Business logic only
+   - JSONStorage: File I/O only
+   - TaskFormatter: Output formatting only
+   - TaskCLI: User interface only
+
+✅ OCP (Open/Closed Principle)
+   - Can add DatabaseStorage without modifying TaskService
+   - Can add MarkdownFormatter without modifying CLI
+   - Extension without modification
+
+✅ LSP (Liskov Substitution Principle)
+   - JSONStorage and InMemoryStorage are interchangeable
+   - SimpleFormatter and DetailedFormatter are interchangeable
+   - Implementations honor contracts
+
+✅ ISP (Interface Segregation Principle)
+   - IStorage: Only save() and load()
+   - ITaskFormatter: Only format_tasks()
+   - Small, focused interfaces
+
+✅ DIP (Dependency Inversion Principle)
+   - TaskService depends on IStorage (abstraction)
+   - Dependencies injected via constructors
+   - Easy to test with mocks
+
+================================================================================
+TESTABILITY
+================================================================================
+
+Thanks to DIP, the code is easily testable:
+
+$ python test_task_manager.py
+
+============================================================
+Running Task Manager Tests
+============================================================
+
+✓ test_add_task passed
+✓ test_complete_task passed
+✓ test_delete_task passed
+✓ test_search_tasks passed
+✓ test_filter_by_priority passed
+✓ test_statistics passed
+✓ test_formatters_are_interchangeable passed
+✓ test_storage_implementations_are_interchangeable passed
+
+============================================================
+All tests passed! ✓
+============================================================
+
+Key Observations:
+- Tests are fast (no file I/O for most)
+- Tests are isolated (each uses its own storage)
+- Tests are reliable (no external dependencies)
+- Easy to test thanks to DIP (dependency injection)
+
+================================================================================
